@@ -33,8 +33,8 @@ defmodule ExAdmin.FormTest do
   test "build_control DateTime" do
     res =
       ExAdmin.Form.build_control(
-        Ecto.DateTime,
-        %Simple{inserted_at: Ecto.DateTime.utc()},
+        DateTime,
+        %Simple{inserted_at: DateTime.utc_now()},
         %{},
         "simple",
         :inserted_at,
@@ -79,8 +79,8 @@ defmodule ExAdmin.FormTest do
   test "build_control Date" do
     res =
       ExAdmin.Form.build_control(
-        Ecto.Date,
-        %Simple{inserted_at: Ecto.DateTime.utc()},
+        Date,
+        %Simple{inserted_at: DateTime.utc_now()},
         %{},
         "simple",
         :inserted_at,
@@ -97,8 +97,8 @@ defmodule ExAdmin.FormTest do
   test "build_control Date with prompts" do
     res =
       ExAdmin.Form.build_control(
-        Ecto.Date,
-        %Simple{inserted_at: Ecto.DateTime.utc()},
+        Date,
+        %Simple{inserted_at: DateTime.utc_now()},
         %{options: [year: [prompt: "year"], month: [prompt: "month"], day: [prompt: "day"]]},
         "simple",
         :inserted_at,
@@ -129,7 +129,7 @@ defmodule ExAdmin.FormTest do
     res =
       ExAdmin.Form.build_control(
         Ecto.Time,
-        %Simple{inserted_at: Ecto.DateTime.utc()},
+        %Simple{inserted_at: DateTime.utc_now()},
         %{},
         "simple",
         :inserted_at,
