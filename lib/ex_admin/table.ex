@@ -89,7 +89,9 @@ defmodule ExAdmin.Table do
             {f_name, opts} ->
               build_field(resource, conn, {f_name, Enum.into(opts, %{})}, fn contents, f_name ->
                 td ".td-#{parameterize(f_name)}" do
-                  contents |> HtmlSanitizeEx.html5() |> Phoenix.HTML.raw()
+                  contents
+                  |> HtmlSanitizeEx.html5()
+                  # |> Phoenix.HTML.raw()
                 end
               end)
           end
@@ -272,24 +274,9 @@ defmodule ExAdmin.Table do
     end
   end
 
-  # def handle_contents(%Ecto.DateTime{} = dt, field_name) do
-  #   markup do
-  #     td class: to_class("td-", field_name) do
-  #       text(to_string(dt))
-  #     end
-  #   end
-  # end
   def handle_contents(%DateTime{} = dt, field_name) do
     td class: to_class("td-", field_name) do
       text(to_string(dt))
-    end
-  end
-
-  def handle_contents(%DateTime{} = dt, field_name) do
-    markup do
-      td class: to_class("td-", field_name) do
-        text(to_string(dt))
-      end
     end
   end
 
@@ -300,22 +287,6 @@ defmodule ExAdmin.Table do
       end
     end
   end
-
-  def handle_contents(%Time{} = dt, field_name) do
-    markup do
-      td class: to_class("td-", field_name) do
-        text(to_string(dt))
-      end
-    end
-  end
-
-  # def handle_contents(%Ecto.Date{} = dt, field_name) do
-  #   markup do
-  #     td class: to_class("td-", field_name) do
-  #       text(to_string(dt))
-  #     end
-  #   end
-  # end
 
   def handle_contents(%Time{} = dt, field_name) do
     markup do
@@ -341,7 +312,7 @@ defmodule ExAdmin.Table do
         contents
         |> text()
         |> HtmlSanitizeEx.html5()
-        |> Phoenix.HTML.raw()
+        # |> Phoenix.HTML.raw()
       end
     end
   end
@@ -350,12 +321,27 @@ defmodule ExAdmin.Table do
     handle_contents(contents, field_name)
   end
 
+  def handle_contents(contents, field_name) when is_list(contents) do
+    content = contents
+    |> Enum.map(fn(content) ->
+      content
+      |> HtmlSanitizeEx.html5()
+      # |> Phoenix.HTML.raw()
+    end)
+    |> Enum.join(" ")
+    res = markup do
+      td to_class(".td-", field_name) do
+        content
+      end
+    end
+  end
+
   def handle_contents(contents, field_name) do
     markup do
       td to_class(".td-", field_name) do
         contents
         |> HtmlSanitizeEx.html5()
-        |> Phoenix.HTML.raw()
+        # |> Phoenix.HTML.raw()
       end
     end
   end

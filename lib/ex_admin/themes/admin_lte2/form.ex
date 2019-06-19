@@ -186,12 +186,10 @@ defmodule ExAdmin.Theme.AdminLte2.Form do
         # end
         case item do
           bin when is_binary(bin) ->
-            # require IEx; IEx.pry
             {htmls <> bin, chgs}
           {:safe, change} ->
             {htmls, [change | chgs]}
           {bin, change} ->
-          # require IEx; IEx.pry
             {htmls <> bin, [change | chgs]}
         end
       end)
@@ -207,7 +205,7 @@ defmodule ExAdmin.Theme.AdminLte2.Form do
         end
 
         div ".box-body" do
-          Phoenix.HTML.raw(html)
+          html
         end
       end
 
