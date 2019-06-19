@@ -27,8 +27,20 @@ defmodule Mix.Tasks.Admin.Gen.Resource do
   end
 
   defp copy_file(%Config{module: module, package_path: package_path} = config) do
-    filename = Macro.underscore(module) <> ".ex"
-    dest_path = Path.join(~w(web admin))
+    filename = Path.basename(Macro.underscore(module)) <> ".ex"
+
+    web_dir = Path.wildcard("lib/*_web") |> hd # TODO: use app_web_path
+
+    dest_path = case Macro.underscore(Blog.Post) |> Path.dirname do #Path.join(~w(web admin))
+      "." ->
+        Path.join([web_dir, "admin"])
+       dir ->
+        if !File.exists? Path.join([web_dir, "admin", dir]) do
+          Path.join([web_dir, "admin", dir])|> File.mkdir
+        end
+        Path.join([web_dir, "admin", dir])
+    end
+
     dest_file_path = Path.join(dest_path, filename)
     source_file = Path.join([package_path | ~w(priv templates admin.gen.resource resource.exs)])
     source = source_file |> EEx.eval_file(base: get_module(), resource: module)
@@ -47,7 +59,7 @@ defmodule Mix.Tasks.Admin.Gen.Resource do
         config :ex_admin, :modules, [
           #{base}.ExAdmin.Dashboard,
           ...
-          #{base}.ExAdmin.#{config.module}
+          #{base}Web.ExAdmin.#{config.module}
         ]
 
     """)

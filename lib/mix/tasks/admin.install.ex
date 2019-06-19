@@ -7,14 +7,14 @@ defmodule Mix.Tasks.Admin.Install do
   # Defaults:
 
     * assets - copy js, css, and image files
-    * brunch - append instructions to brunch-config.js
+    * webpack - copy assets to webpack dir
     * config - add configuration to config/config.exs
     * dashboard - create a default dashboard
     * route - display instructions to add the admin routes
 
   ## Options:
 
-    * --no-brunch - Write assets to priv/static instead of assets/static/
+    * --no-webpack - Write assets to priv/static instead of assets/static/
     * --no-assets - Skip the assets
     * --no-config - Skip the config
     * --no-dashboard - Skip the dashboard
@@ -27,7 +27,7 @@ defmodule Mix.Tasks.Admin.Install do
   import Mix.ExAdmin.Utils
   import ExAdmin.Gettext
 
-  @boolean_switchs ~w(assets config route dashboard brunch)
+  @boolean_switchs ~w(assets config route dashboard webpack)
   @switches Enum.map(@boolean_switchs, &{&1, :boolean})
 
   defmodule Config do
@@ -37,7 +37,7 @@ defmodule Mix.Tasks.Admin.Install do
               dashboard: true,
               package_path: nil,
               config: true,
-              brunch: true
+              webpack: true
   end
 
   def run(args) do
@@ -57,7 +57,6 @@ defmodule Mix.Tasks.Admin.Install do
     |> do_dashboard
     |> do_route
     |> do_paging
-    |> do_assets_instructions
   end
 
   def check_project(config) do
@@ -80,19 +79,6 @@ defmodule Mix.Tasks.Admin.Install do
 
   defp check_config(config), do: config
 
-  defp check_assets(%{assets: true, brunch: true} = config) do
-    brunch_path = Path.join(~w(assets brunch-config.js))
-    IO.inspect(brunch_path)
-
-    unless File.exists?(brunch_path) do
-      Mix.raise("""
-      Can't find brunch-config.js
-      """)
-    end
-
-    config
-  end
-
   defp check_assets(%{assets: true} = config) do
     path = Path.join(~w(priv static))
 
@@ -107,13 +93,8 @@ defmodule Mix.Tasks.Admin.Install do
 
   defp check_assets(config), do: config
 
-  def do_assets(%Config{assets: true, brunch: true} = config) do
+  def do_assets(%Config{assets: true, webpack: true} = config) do
     base_path = Path.join(~w(priv static))
-    brunch_config_path = Path.join(~w{assets brunch-config.js})
-
-    File.mkdir_p(Path.join(~w{assets static vendor}))
-    File.mkdir_p(Path.join(~w{assets static assets fonts}))
-    File.mkdir_p(Path.join(~w{assets static assets images ex_admin datepicker}))
 
     status_msg("creating", "css files")
 
@@ -129,16 +110,6 @@ defmodule Mix.Tasks.Admin.Install do
     copy_vendor_r(base_path, "fonts")
     copy_vendor_r(base_path, "images")
 
-    case File.read(brunch_config_path) do
-      {:ok, file} ->
-        File.write!(brunch_config_path, file <> brunch_instructions())
-
-      error ->
-        Mix.raise("""
-        Could not open brunch-config.js file. #{inspect(error)}
-        """)
-    end
-
     config
   end
 
@@ -151,6 +122,7 @@ defmodule Mix.Tasks.Admin.Install do
     File.mkdir_p(Path.join(~w{priv static images ex_admin datepicker}))
     File.mkdir_p(Path.join(["lib", app_web_path, "admin"]))
 
+require IEx; IEx.pry
     status_msg("creating", "css files")
 
     ~w(admin_lte2.css admin_lte2.css.map active_admin.css.css active_admin.css.css.map)
@@ -162,6 +134,7 @@ defmodule Mix.Tasks.Admin.Install do
        ~w(ex_admin_common.js ex_admin_common.js.map))
     |> Enum.each(&copy_file(base_path, "js", &1))
 
+require IEx; IEx.pry
     copy_r(base_path, "fonts")
     copy_r(base_path, "images")
 
@@ -289,19 +262,6 @@ defmodule Mix.Tasks.Admin.Install do
     config
   end
 
-  def do_assets_instructions(%{assets: true, brunch: true} = config) do
-    Mix.shell().info("""
-
-    Check the bottom of your brunch-config.js file.
-
-      Instructions for adding the ExAdmin assets have been added.
-    """)
-
-    config
-  end
-
-  def do_assets_instructions(config), do: config
-
   defp copy_r(base_path, path) do
     File.cp_r(
       Path.join([get_package_path(), base_path, path]),
@@ -321,64 +281,25 @@ defmodule Mix.Tasks.Admin.Install do
   end
 
   defp copy_vendor(from_path, path, filename) do
+    dest = Path.join([File.cwd!(), "assets", "static", path])
+    File.mkdir_p(dest)
+    IO.puts("copying #{Path.join([get_package_path(), from_path, path, filename])} -> #{Path.join([dest, filename])}")
     File.cp(
       Path.join([get_package_path(), from_path, path, filename]),
-      Path.join([File.cwd!(), "assets", "static", "vendor", filename])
+      Path.join([dest, filename])
     )
   end
 
   defp copy_vendor_r(base_path, path) do
-    File.cp_r(
-      Path.join([get_package_path(), base_path, path]),
-      Path.join([File.cwd!(), "assets", "static", "assets", path])
-    )
-  end
-
-  def brunch_instructions do
-    """
-
-    // To add the ExAdmin generated assets to your brunch build, do the following:
-    //
-    // Replace
-    //
-    //     javascripts: {
-    //       joinTo: "js/app.js"
-    //     },
-    //
-    // With
-    //
-    //     javascripts: {
-    //       joinTo: {
-    //         "js/app.js": /^(static\\/js)|(node_modules)/,
-    //         "js/ex_admin_common.js": ["vendor/ex_admin_common.js"],
-    //         "js/admin_lte2.js": ["vendor/admin_lte2.js"],
-    //         "js/jquery.min.js": ["vendor/jquery.min.js"],
-    //       }
-    //     },
-    //
-    // Replace
-    //
-    //     stylesheets: {
-    //       joinTo: "css/app.css",
-    //       order: {
-    //         after: ["css/app.css"] // concat app.css last
-    //       }
-    //     },
-    //
-    // With
-    //
-    //     stylesheets: {
-    //       joinTo: {
-    //         "css/app.css": /^(static\\/css)/,
-    //         "css/admin_lte2.css": ["vendor/admin_lte2.css"],
-    //         "css/active_admin.css.css": ["vendor/active_admin.css.css"],
-    //       },
-    //       order: {
-    //         after: ["css/app.css"] // concat app.css last
-    //       }
-    //     },
-    //
-    """
+    dest_dir = Path.join([File.cwd!(), "assets", "static", path])
+    File.mkdir_p(dest_dir)
+    Path.join([get_package_path(), base_path, path])
+    |> File.ls!
+    |> Enum.each(fn(file) ->
+      dest = Path.join([dest_dir, file])
+      IO.puts("Copying #{Path.join([get_package_path(), base_path, path, file])} -> #{dest}")
+      File.cp_r(Path.join([get_package_path(), base_path, path, file]), dest)
+    end)
   end
 
   defp parse_args(args) do

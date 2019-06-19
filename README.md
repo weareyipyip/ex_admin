@@ -44,10 +44,12 @@ config/config.exs
 ```elixir
 config :ex_admin,
   repo: MyProject.Repo,
-  module: MyProject.Web,  
+  module: MyProjectWeb,
   modules: [
     MyProject.ExAdmin.Dashboard,
   ]
+
+config :gettext, default_locale: "en/us"
 
 ```
 
@@ -108,7 +110,7 @@ You should see the default Dashboard page.
 To add a model, use `admin.gen.resource` mix task:
 
 ```
-mix admin.gen.resource MyModel
+mix admin.gen.resource Blog.Post
 ```
 
 Add the new module to the config file:
@@ -118,16 +120,16 @@ config/config.exs
 ```elixir
 config :ex_admin,
   repo: MyProject.Repo,
-  module: MyProject,
+  module: MyProjectWeb,
   modules: [
     MyProject.ExAdmin.Dashboard,
-    MyProject.ExAdmin.MyModel,
+    MyProject.ExAdmin.Blog.Post,
   ]
 ```
 
 Start the phoenix server again and browse to `http://localhost:4000/admin/my_model`
 
-You can now list/add/edit/and delete `MyModel`s.
+You can now list/add/edit/and delete `Blog.Post`s.
 
 ### Changesets
 ExAdmin will use your schema's changesets. By default we call the `changeset` function on your schema, although you
@@ -248,9 +250,9 @@ Use the `index do` command to define the fields to be displayed.
 
 admin/my_model.ex
 ```elixir
-defmodule MyProject.ExAdmin.MyModel do
+defmodule MyProject.ExAdmin.Blog.Post do
   use ExAdmin.Register
-  register_resource MyProject.MyModel do
+  register_resource MyProject.Blog.Post do
 
     index do
       selectable_column()
