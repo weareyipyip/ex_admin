@@ -199,6 +199,7 @@ require IEx; IEx.pry
   end
 
   def do_dashboard(%Config{dashboard: true} = config) do
+    Application.ensure_started(:gettext)
     app_web_path = get_web_path()
     dest_path = Path.join([File.cwd!() | ["lib", app_web_path, "admin"]])
     dest_file_path = Path.join(dest_path, "dashboard.ex")
@@ -238,9 +239,9 @@ require IEx; IEx.pry
 
       config :ex_admin,
         repo: #{base}.Repo,
-        module: #{base},
+        module: #{base}Web,
         modules: [
-          #{base}.ExAdmin.Dashboard,
+          #{base}Web.ExAdmin.Dashboard,
         ]
     """)
   end
