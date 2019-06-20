@@ -122,7 +122,6 @@ defmodule Mix.Tasks.Admin.Install do
     File.mkdir_p(Path.join(~w{priv static images ex_admin datepicker}))
     File.mkdir_p(Path.join(["lib", app_web_path, "admin"]))
 
-require IEx; IEx.pry
     status_msg("creating", "css files")
 
     ~w(admin_lte2.css admin_lte2.css.map active_admin.css.css active_admin.css.css.map)
@@ -134,7 +133,6 @@ require IEx; IEx.pry
        ~w(ex_admin_common.js ex_admin_common.js.map))
     |> Enum.each(&copy_file(base_path, "js", &1))
 
-require IEx; IEx.pry
     copy_r(base_path, "fonts")
     copy_r(base_path, "images")
 

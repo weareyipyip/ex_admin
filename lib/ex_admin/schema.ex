@@ -1,12 +1,10 @@
 defmodule ExAdmin.Schema do
   @moduledoc false
   def primary_key(%Ecto.Query{from: %Ecto.Query.FromExpr{source: {_, mod}}}) do
-  # require IEx; IEx.pry
     primary_key(mod)
   end
 
   def primary_key(module) when is_atom(module) do
-  # require IEx; IEx.pry
     case module.__schema__(:primary_key) do
       [] -> nil
       [key | _] -> key
@@ -14,7 +12,6 @@ defmodule ExAdmin.Schema do
   end
 
   def primary_key(resource) do
-  # require IEx; IEx.pry
     cond do
       Map.get(resource, :__struct__, false) ->
         primary_key(resource.__struct__)
