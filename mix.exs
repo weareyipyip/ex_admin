@@ -77,7 +77,7 @@ defmodule ExAdmin.Mixfile do
       {:excoveralls, "~> 0.5", only: :test},
       {:gettext, "~> 0.11"},
       {:html_entities, "~> 0.4"},
-      {:html_sanitize_ex, github: "iwarshak/html_sanitize_ex"},
+      {:html_sanitize_ex, github: "sublimecoder/html_sanitize_ex"},
       {:hound, "~> 1.0", only: :test}
     ]
   end
