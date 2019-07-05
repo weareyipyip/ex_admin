@@ -302,14 +302,15 @@ defmodule ExAdmin.Utils do
   #   {date, {h, m, s}}
   # end
   def to_datetime(%DateTime{} = dt) do
-    {:ok, {date, {h, m, s, _ms}}} = DateTime.dump(dt)
-    {date, {h, m, s}}
+    %{month: month, day: day, year: year, hour: hour, minute: minute, second: second} = dt
+    # {:ok, {date, {h, m, s, _ms}}} = DateTime.dump(dt)
+    {{month, day, year}, {hour, minute, second}}
   end
 
-  def to_datetime(%DateTime{} = dt) do
-    DateTime.to_naive(dt)
-    |> NaiveDateTime.to_erl()
-  end
+  # def to_datetime(%DateTime{} = dt) do
+  #   DateTime.to_naive(dt)
+  #   |> NaiveDateTime.to_erl()
+  # end
 
   @doc false
   def format_time_difference({d, {h, m, s}}) do
