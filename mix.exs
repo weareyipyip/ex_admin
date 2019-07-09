@@ -48,7 +48,8 @@ defmodule ExAdmin.Mixfile do
       :csvlixir,
       :logger,
       :ex_queb,
-      :xain
+      :xain,
+      :html_sanitize_ex
     ]
   end
 
