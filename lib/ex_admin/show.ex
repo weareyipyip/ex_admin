@@ -502,7 +502,7 @@ defmodule ExAdmin.Show do
           |> Enum.map(&{translate_field(defn, &1), %{}})
           |> Enum.reject(&is_nil(&1))
 
-        ExAdmin.Table.attributes_table(conn, resource, %{rows: columns}) #|> IO.inspect
+        ExAdmin.Table.attributes_table(conn, resource, %{rows: columns})
     end
   end
 
