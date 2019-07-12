@@ -1168,7 +1168,7 @@ defmodule ExAdmin.Form do
     end)
   end
 
-  defp build_checkboxes(conn, name, collection, opts, resource, model_name, errors, name_ids) do
+  defp build_checkboxes(conn, name, collection, _opts, resource, model_name, errors, name_ids) do
     theme_module(conn, Form).wrap_collection_check_boxes(fn ->
       for opt <- collection do
         opt_id = Schema.get_id(opt)
@@ -1602,13 +1602,13 @@ defmodule ExAdmin.Form do
 
   defp build_select(_name, type, value, opts) do
     value =
-      if Range.range?(value) do
-        Enum.map(value, fn x ->
-          val = Integer.to_string(x)
-          {val, val}
-        end)
-      else
-        value
+      case value do
+        _first.._last ->
+          Enum.map(value, fn x ->
+            val = Integer.to_string(x)
+            {val, val}
+          end)
+        _ -> value
       end
 
     select "", [{:class, "form-control date-time"} | opts] do

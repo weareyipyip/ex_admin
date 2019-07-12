@@ -1,4 +1,3 @@
-alias ExAdmin.Utils
 
 defprotocol ExAdmin.Render do
   # @fallback_to_any true

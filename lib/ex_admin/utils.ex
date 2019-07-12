@@ -381,7 +381,6 @@ defmodule ExAdmin.Utils do
     false
   end
 
-  @doc false
   @doc "Pads with zero"
   def zero_pad(val, count) do
     num = Integer.to_string(val)

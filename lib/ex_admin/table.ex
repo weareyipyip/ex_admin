@@ -126,9 +126,7 @@ defmodule ExAdmin.Table do
     do:
       output
       |> Enum.reverse()
-      |> Enum.map(&Phoenix.HTML.safe_to_string(Phoenix.HTML.html_escape(&1)))
       |> Enum.join()
-      |> Phoenix.HTML.raw()
 
   def do_panel(
         conn,
@@ -329,7 +327,7 @@ defmodule ExAdmin.Table do
       # |> Phoenix.HTML.raw()
     end)
     |> Enum.join(" ")
-    res = markup do
+    _res = markup do
       td to_class(".td-", field_name) do
         content
       end

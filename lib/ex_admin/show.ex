@@ -65,6 +65,7 @@ defmodule ExAdmin.Show do
         import ExAdmin.Utils
         import ExAdmin.ViewHelpers
         _ = var!(resource)
+        _ = unquote(resource) # allow others downstream to not have warnings of not using
 
         markup safe: true do
           unquote(contents)
@@ -501,7 +502,7 @@ defmodule ExAdmin.Show do
           |> Enum.map(&{translate_field(defn, &1), %{}})
           |> Enum.reject(&is_nil(&1))
 
-        ExAdmin.Table.attributes_table(conn, resource, %{rows: columns})
+        ExAdmin.Table.attributes_table(conn, resource, %{rows: columns}) #|> IO.inspect
     end
   end
 
