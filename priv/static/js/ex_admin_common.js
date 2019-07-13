@@ -109,7 +109,7 @@
   require._cache = cache;
   globals.require = require;
 })();
-//= require active_admin/base
+//= require base
 //= require jquery
 //= require jquery-ui
 //= require jquery-migrate-1.1.1

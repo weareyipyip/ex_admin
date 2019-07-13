@@ -51,12 +51,12 @@ defmodule Mix.Tasks.Admin.Install do
 
   def do_install(config) do
     config
-    |> check_project
     |> do_assets
     |> do_config
     |> do_dashboard
     |> do_route
     |> do_paging
+    |> check_project
   end
 
   def check_project(config) do
@@ -94,11 +94,11 @@ defmodule Mix.Tasks.Admin.Install do
   defp check_assets(config), do: config
 
   def do_assets(%Config{assets: true, webpack: true} = config) do
-    base_path = Path.join(~w(priv static))
+    base_path = Path.join(~w(assets static))
 
     status_msg("creating", "css files")
 
-    ~w(admin_lte2.css admin_lte2.css.map active_admin.css.css active_admin.css.css.map)
+    ~w(admin_lte2.css admin_lte2.css.map)
     |> Enum.each(&copy_vendor(base_path, "css", &1))
 
     status_msg("creating", "js files")
@@ -124,7 +124,7 @@ defmodule Mix.Tasks.Admin.Install do
 
     status_msg("creating", "css files")
 
-    ~w(admin_lte2.css admin_lte2.css.map active_admin.css.css active_admin.css.css.map)
+    ~w(admin_lte2.css admin_lte2.css.map)
     |> Enum.each(&copy_file(base_path, "css", &1))
 
     status_msg("creating", "js files")
@@ -253,7 +253,10 @@ defmodule Mix.Tasks.Admin.Install do
     Add Scrivener paging to your Repo:
 
       defmodule #{module_name}.Repo do
-        use Ecto.Repo, otp_app: :#{base}
+        use Ecto.Repo, 
+          otp_app: :#{base}, 
+          adapter: Ecto.Adapters.Postgres
+
         use Scrivener, page_size: 10  # <--- add this
       end
     """)
@@ -282,7 +285,13 @@ defmodule Mix.Tasks.Admin.Install do
   defp copy_vendor(from_path, path, filename) do
     dest = Path.join([File.cwd!(), "assets", "static", path])
     File.mkdir_p(dest)
-    IO.puts("copying #{Path.join([get_package_path(), from_path, path, filename])} -> #{Path.join([dest, filename])}")
+
+    IO.puts(
+      "copying #{Path.join([get_package_path(), from_path, path, filename])} -> #{
+        Path.join([dest, filename])
+      }"
+    )
+
     File.cp(
       Path.join([get_package_path(), from_path, path, filename]),
       Path.join([dest, filename])
@@ -292,9 +301,10 @@ defmodule Mix.Tasks.Admin.Install do
   defp copy_vendor_r(base_path, path) do
     dest_dir = Path.join([File.cwd!(), "assets", "static", path])
     File.mkdir_p(dest_dir)
+
     Path.join([get_package_path(), base_path, path])
-    |> File.ls!
-    |> Enum.each(fn(file) ->
+    |> File.ls!()
+    |> Enum.each(fn file ->
       dest = Path.join([dest_dir, file])
       IO.puts("Copying #{Path.join([get_package_path(), base_path, path, file])} -> #{dest}")
       File.cp_r(Path.join([get_package_path(), base_path, path, file]), dest)

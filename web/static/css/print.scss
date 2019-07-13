@@ -5,11 +5,9 @@ $primary-color: black;
 $text-color: black;
 
 // Reset
-@import "active_admin/mixins/reset";
 @include global-reset;
 
 // Partials
-@import "active_admin/typography";
 
 body {
   font-family: Helvetica, Arial, sans-serif;
@@ -60,14 +58,6 @@ h3 {
   .breadcrumb, #titlebar_right {
     display: none;
   }
-}
-
-// Content
-#active_admin_content {
-  border-top: thick solid black;
-  clear: both;
-  margin-top: 2em;
-  padding-top: 3em;
 }
 
 // Footer
@@ -177,32 +167,6 @@ table {
 .comments {
   form {
     display: none;
-  }
-
-  .active_admin_comment {
-    border-top: thin solid black;
-    padding-top: 1em;
-
-    .active_admin_comment_meta {
-      h4 {
-        font-size: 1em;
-        font-weight: bold;
-        float: left;
-        margin-right: .5em;
-        margin-bottom: 0;
-      }
-
-      span {
-        font-size: .9em;
-        font-style: italic;
-        vertical-align: top;
-      }
-    }
-
-    .active_admin_comment_body {
-      clear: both;
-      margin-bottom: 1em;
-    }
   }
 }
 

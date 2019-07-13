@@ -370,7 +370,8 @@ config :ex_admin,
 
 ## Theme Support
 
-ExAdmin supports 2 themes. The new AdminLte2 theme is enabled by default. The old ActiveAdmin theme is also supported for those that want backward compatibility.
+ExAdmin supports 1 theme. The AdminLte2 theme is enabled by default. Additional
+themes maybe added in the furture
 
 ### Changing the Theme
 
@@ -437,7 +438,7 @@ We appreciate any contribution to ExAdmin. Check our [CODE_OF_CONDUCT.md](CODE_O
 
 ## License
 
-`ex_admin` is Copyright (c) 2015-2016 E-MetroTel
+`ex_admin` is Copyright (c) 2015-2019 E-MetroTel
 
 The source code is released under the MIT License.
 

@@ -39,12 +39,12 @@ defmodule ExAdmin do
 
   ### Map Type
 
-  By default, ExAdmin used Poison.encode! to encode `Map` type. To change the
+  By default, ExAdmin used Jason.encode! to encode `Map` type. To change the
   decoding, add override the protocol. For Example:
 
       defimpl ExAdmin.Render, for: Map do
         def to_string(map) do
-          {:ok, encoded} = Poison.encode map
+          {:ok, encoded} = Jason.encode map
           encoded
         end
       end
@@ -64,7 +64,7 @@ defmodule ExAdmin do
 
           def decode(conn, params) do
             if get_in params, [:usersession, :data] do
-              params = update_in params, [:usersession, :data], &(Poison.decode!(&1))
+              params = update_in params, [:usersession, :data], &(Jason.decode!(&1))
             end
             {conn, params}
           end

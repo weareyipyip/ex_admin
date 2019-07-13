@@ -18,8 +18,6 @@ exports.config = {
           "web/static/vendor/jquery-ui.min.js",
         ],
         'js/ex_admin_common.js': [
-          "web/static/vendor/active_admin.js",
-          /^(web\/static\/vendor\/active_admin\/)/,
           "web/static/vendor/best_in_place.js",
           "web/static/vendor/best_in_place.purr.js",
           "web/static/vendor/jquery-ujs.js.js",
@@ -55,15 +53,11 @@ exports.config = {
         "web/static/vendor/themes/admin_lte2/plugins/datepicker/datepicker3.css",
         "web/static/vendor/themes/admin_lte2/plugins/daterangepicker/daterangepicker-bs3.css",
         "web/static/vendor/themes/admin_lte2/plugins/select2/select2.css",
-      ],
-      "css/active_admin.css.css": [
-        "web/static/vendor/themes/active_admin/css/active_admin.css.css",
-        "web/static/vendor/themes/admin_lte2/plugins/select2/select2.css",
       ]
     }
     },
     // templates: {
-    //   joinTo: 'js/active_admin.js'
+    //   joinTo: 'js/admin_lte2.js'
     // }
   },
 

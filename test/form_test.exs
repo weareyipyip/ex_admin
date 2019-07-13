@@ -15,7 +15,6 @@ defmodule ExAdmin.FormTest do
 
   def get_clean_html(html) do
     html
-    |> Phoenix.HTML.safe_to_string()
     |> HtmlEntities.decode()
   end
 
@@ -202,25 +201,4 @@ defmodule ExAdmin.FormTest do
     options = Floki.find(res, "select[multiple=multiple] option")
     assert Enum.count(options) == 2
   end
-
-  # test "build_item :has_many", %{conn: conn} do
-  #   fun = fn(_p) ->
-  #     [%{name: :number, opts: %{},
-  #        resource: {TestExAdmin.PhoneNumber, TestExAdmin.ContactPhoneNumber},
-  #        type: :input},
-  #      %{name: :label,
-  #        opts: %{collection: ["Primary Phone", "Secondary Phone", "Home Phone",
-  #           "Work Phone", "Mobile Phone", "Other Phone"]},
-  #        resource: {TestExAdmin.PhoneNumber, TestExAdmin.ContactPhoneNumber},
-  #        type: :input}]
-  #   end
-  #   resource = Repo.insert! Contact.changeset(%Contact{}, %{first_name: "First", last_name: "Last"})
-  #   numbers = for {label, number} <- [{"Home", "5555555555"}, {"Work", "5555555551"}] do
-  #     pn = Repo.insert! PhoneNumber.changeset(%PhoneNumber{}, %{number: number, label: label})
-  #     Repo.insert! ContactPhoneNumber.changeset(%ContactPhoneNumber{}, %{contact_id: resource.id, phone_number_id: pn.id})
-  #   end
-  #   item = %{type: :has_many, resource: nil, name: :phone_numbers, opts: %{fun: fun}}
-  #   res = ExAdmin.Form.build_item(conn, item, resource, "contact", nil)
-  #   assert res == ""
-  # end
 end
