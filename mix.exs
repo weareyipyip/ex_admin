@@ -48,7 +48,8 @@ defmodule ExAdmin.Mixfile do
       :csvlixir,
       :logger,
       :ex_queb,
-      :xain
+      :xain,
+      :html_sanitize_ex
     ]
   end
 
@@ -77,8 +78,9 @@ defmodule ExAdmin.Mixfile do
       {:excoveralls, "~> 0.5", only: :test},
       {:gettext, "~> 0.11"},
       {:html_entities, "~> 0.4"},
-      {:html_sanitize_ex, "~> 1.3.0-rc3"},
-      {:hound, "~> 1.0", only: :test}
+      {:html_sanitize_ex, "~> 1.4"},
+      {:hound, "~> 1.0", only: :test},
+      {:poison, "~> 3.0", only: :test}
     ]
   end
 
